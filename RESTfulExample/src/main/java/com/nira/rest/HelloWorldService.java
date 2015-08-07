@@ -5,7 +5,7 @@ import javax.ws.rs.core.Response;
  
 @Path("/hello")
 public class HelloWorldService {
- 
+
 	@Path("/{param}")
 	@GET
 	public Response getMsg(@PathParam("param") String msg) {
@@ -21,7 +21,7 @@ public class HelloWorldService {
 	@POST
 	public Response postMsg(@PathParam("param") String msg){
 		System.out.println("hello");
-		return Response.status(201).entity("Post message successful").build();
+		return Response.status(200).entity("Post message successful").build();
 	}
 
 //	@Path("/post")
