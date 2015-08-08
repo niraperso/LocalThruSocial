@@ -2,22 +2,33 @@ package com.nira.rest;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-
+import com.nira.ResponseElements;
+import com.nira.utils.GetData;
 import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
- 
-@Path("/hello")
+import java.util.ArrayList;
+
+@Path("/item")
 public class HelloWorldService {
 
-	@Path("/{param}")
+	@Path("/query")
 	@GET
-	public Response getMsg(@PathParam("param") String msg) {
+	public Response getMsg(@QueryParam("item") String item,
+						   @QueryParam("lat") double lat, @QueryParam("lon") double lon) {
 
-        System.out.println("hello");
-        String output = "Jersey say : " + msg;
- 
-		return Response.status(200).entity(output).build();
+		GetData data = new GetData();
+		String feeds;
+		ArrayList<ResponseElements> info = data.getData(item,lat,lon);
+		if(info!=null) {
+			Gson gson = new Gson();
+			System.out.println(gson.toJson(info));
+			feeds = gson.toJson(info);
+		}
+		else{
+			feeds="{}";
+		}
+		return Response.status(200).entity(feeds).build();
  
 	}
 
@@ -35,11 +46,4 @@ public class HelloWorldService {
 
 		return Response.status(200).entity(resElem.toString()).build();
 	}
-//	@Path("/post")
-//	@PUT
-//	public Response postMsg1(String msg){
-//		System.out.println("hello");
-//		return Response.status(200).entity("Post message successful").build();
-//	}
- 
 }
