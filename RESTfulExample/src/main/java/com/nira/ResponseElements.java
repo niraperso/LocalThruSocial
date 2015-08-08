@@ -6,9 +6,36 @@ package com.nira;
 public class ResponseElements {
 
     private String item;
-    private String location;
     private double price;
     private double rating;
+    private double lat;
+    private double lon;
+
+    public double getLat() {
+        return lat;
+    }
+
+    public void setLat(double lat) {
+        this.lat = lat;
+    }
+
+    public double getLon() {
+        return lon;
+    }
+
+    public void setLon(double lon) {
+        this.lon = lon;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    private String address;
 
     public String getItem() {
         return item;
@@ -16,14 +43,6 @@ public class ResponseElements {
 
     public void setItem(String item) {
         this.item = item;
-    }
-
-    public String getLocation() {
-        return location;
-    }
-
-    public void setLocation(String location) {
-        this.location = location;
     }
 
     public double getPrice() {
