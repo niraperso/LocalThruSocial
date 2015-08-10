@@ -1,1 +1,5 @@
+com/nira/utils/GetData.class
+com/nira/rest/DBTest.class
+com/nira/ResponseElements.class
 com/nira/rest/HelloWorldService.class
+com/nira/utils/DBConnector.class

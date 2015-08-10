@@ -1,6 +1,6 @@
 package com.nira.utils;
 
-import com.nira.ResponseElements;
+import com.nira.ItemInfo;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -11,9 +11,9 @@ import java.util.ArrayList;
  */
 public class GetData {
 
-    public ArrayList<ResponseElements> getData(String key,double lat,double lon){
+    public ArrayList<ItemInfo> getData(String key,double lat,double lon){
         Connection c = DBConnector.getConnection();
-        ArrayList<ResponseElements> feedData = new ArrayList<ResponseElements>();
+        ArrayList<ItemInfo> feedData = new ArrayList<ItemInfo>();
         try {
             PreparedStatement ps = c.prepareStatement("select ss.address,ss.distance,item.item_name,item.price,item.rating,ss.lat,ss.lon " +
                     "from (SELECT id, ( 6371 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lon ) - radians(?) ) + sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance" +
@@ -24,7 +24,7 @@ public class GetData {
             ps.setString(4,key);
             ResultSet rs = ps.executeQuery();
             while(rs.next()){
-                ResponseElements responseElement = new ResponseElements();
+                ItemInfo responseElement = new ItemInfo();
                 responseElement.setItem(rs.getString("item_name"));
                 responseElement.setLat(rs.getDouble("lat"));
                 responseElement.setLon(rs.getDouble("lon"));

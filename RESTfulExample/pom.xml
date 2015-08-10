@@ -43,7 +43,7 @@
   <build>
     <plugins>
 
-      <plugin>
+      <!--<plugin>
         <groupId>org.apache.tomcat.maven</groupId>
         <artifactId>tomcat7-maven-plugin</artifactId>
         <configuration>
@@ -56,11 +56,11 @@
           </warFile>
           <path>/${project.name}</path>
         </configuration>
-      </plugin>
+      </plugin>-->
 
 
 
-      <!--<plugin>
+      <plugin>
         <groupId>org.mortbay.jetty</groupId>
         <artifactId>maven-jetty-plugin</artifactId>
         <version>6.1.15</version>
@@ -83,7 +83,7 @@
             <logTimeZone>GMT</logTimeZone>
           </requestLog>
         </configuration>
-      </plugin>-->
+      </plugin>
     </plugins>
     <finalName>RESTfulExample</finalName>
   </build>

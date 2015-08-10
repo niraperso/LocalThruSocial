@@ -13,8 +13,8 @@ public class DBConnector {
         try {
             Class.forName("org.postgresql.Driver");
             c = DriverManager
-                    .getConnection("jdbc:postgresql://127.0.0.1:5432/ItemDb",
-                            "inmobi", "inmobi");
+                    .getConnection("jdbc:postgresql://127.0.0.1:5499/item_prod",
+                            "dhirendra", "Genesys@virus10");
         } catch (Exception e) {
             System.out.println("Excetion caught..");
             e.printStackTrace();
