@@ -34,6 +34,21 @@
       <artifactId>gson</artifactId>
       <version>2.3</version>
     </dependency>
+    <dependency>
+      <groupId>org.projectlombok</groupId>
+      <artifactId>lombok</artifactId>
+      <version>${lombok.version}</version>
+    </dependency>
+      <dependency>
+      <groupId>commons-configuration</groupId>
+      <artifactId>commons-configuration</artifactId>
+      <version>1.10</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.commons</groupId>
+          <artifactId>commons-lang3</artifactId>
+          <version>3.3.2</version>
+      </dependency>
   </dependencies>
   <build>
     <plugins>
@@ -77,4 +92,7 @@
     </plugins>
     <finalName>RESTfulExample</finalName>
   </build>
+  <properties>
+    <lombok.version>1.14.8</lombok.version>
+  </properties>
 </project>
