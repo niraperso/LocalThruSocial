@@ -46,18 +46,38 @@ public class HelloWorldService {
 		UpdateItem upItem = new UpdateItem();
 		
 		ItemInfo itemInfo = itemJsonParser.getItemData(itemData);
-			
-		double latVal = itemInfo.getLat();
-		double lonVal = itemInfo.getLon();
+
+		int res = upItem.isLatLonExist(itemInfo);
+
+		System.out.println("Lat long id -"+res);
 		
-		boolean res = upItem.isLatLonExist(latVal, lonVal);	
-		
-		if(!res){
-			
-			upItem.updateLocation(latVal, lonVal);
+		if( res == 0){
+
+			// insert into item_location and item_store
+			upItem.updateLocation(itemInfo);
+			//select query with where lat lon
+			int lat_lon_id = upItem.getLatLonId(itemInfo);
+			//insert into item_store with lat_lon_id
+			upItem.insertIntoItemStore(lat_lon_id, itemInfo);
+		}else{
+
+			//if lat-lon exist,
+			//check for item present in item_store
+			//
+			String itemName  = upItem.checkItemStore(res);
+
+			if(!itemName.equalsIgnoreCase(itemInfo.getItem())){
+
+				//insert into item_store and item_location table
+				upItem.updateItem(itemInfo);
+			}else{
+
+				//get price from item_store and display
+			}
+
 		}
 		
 		
-		return Response.status(201).entity().build();
+		return Response.status(201).entity("The select query result -"+res).build();
 	}
 }

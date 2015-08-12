@@ -8,10 +8,20 @@ public class ItemInfo {
     private String item;
     private double price;
     private double rating;
+
+    private int locationID;
     private double lat;
     private double lon; 
     private String address;
-    		 
+
+    public int getLocationID() {
+        return locationID;
+    }
+
+    public void setLocationID(int locId) {
+        this.locationID = locId;
+    }
+
     public double getLat() {
         return lat;
     }

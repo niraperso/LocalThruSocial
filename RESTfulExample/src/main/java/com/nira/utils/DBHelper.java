@@ -9,10 +9,12 @@ import com.nira.ItemInfo;
 
 public class DBHelper {
 	
-	Connection con;
+	Connection connection;
+	PreparedStatement preparedStmt;
+
 	public DBHelper(){
-		
-		con = DBConnector.getConnection();
+
+		connection = DBConnector.getConnection();
 	}
 	
 	public ItemInfo selectQuery(String query) {
@@ -20,12 +22,13 @@ public class DBHelper {
 		
 		ItemInfo itemInfo = new ItemInfo();
 		try {
-			
-			PreparedStatement pr = con.prepareStatement(query);
-			ResultSet rs = pr.executeQuery();
+
+			preparedStmt = connection.prepareStatement(query);
+			ResultSet rs = preparedStmt.executeQuery();
 			
 			while(rs.next()){
-				
+
+				itemInfo.setLocationID(rs.getInt("id"));
 				itemInfo.setLat(rs.getDouble("lat"));
 				itemInfo.setLon(rs.getDouble("lon"));
 				itemInfo.setAddress(rs.getString("address"));
@@ -37,5 +40,15 @@ public class DBHelper {
 		
 		return itemInfo;
 	}
+	
+	public void insertQuery(String query){
 
+		try {
+
+			preparedStmt = connection.prepareStatement(query);
+			preparedStmt.executeUpdate();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 }
