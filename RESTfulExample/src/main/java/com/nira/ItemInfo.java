@@ -13,6 +13,16 @@ public class ItemInfo {
     private double lat;
     private double lon; 
     private String address;
+    private String desc;
+
+    public String getDescription(){
+        return desc;
+    }
+
+    public void setDescription(String description){
+
+        this.desc = description;
+    }
 
     public int getLocationID() {
         return locationID;

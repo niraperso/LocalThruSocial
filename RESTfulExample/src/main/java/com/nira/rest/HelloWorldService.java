@@ -11,6 +11,7 @@ import javax.ws.rs.*;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
+import java.sql.SQLException;
 import java.util.ArrayList;
 
 @Path("/item")
@@ -40,7 +41,7 @@ public class HelloWorldService {
 	@POST
 	@Produces(MediaType.APPLICATION_JSON)
 	@Consumes(MediaType.APPLICATION_JSON)
-	public Response postMsg(String itemData){
+	public Response postMsg(String itemData) throws SQLException {
 		
 		ItemJsonParser itemJsonParser = new ItemJsonParser();
 		UpdateItem upItem = new UpdateItem();
@@ -48,8 +49,6 @@ public class HelloWorldService {
 		ItemInfo itemInfo = itemJsonParser.getItemData(itemData);
 
 		int res = upItem.isLatLonExist(itemInfo);
-
-		System.out.println("Lat long id -"+res);
 		
 		if( res == 0){
 
@@ -59,25 +58,30 @@ public class HelloWorldService {
 			int lat_lon_id = upItem.getLatLonId(itemInfo);
 			//insert into item_store with lat_lon_id
 			upItem.insertIntoItemStore(lat_lon_id, itemInfo);
+
+			return Response.status(201).entity("Updated item!!").build();
+
 		}else{
 
 			//if lat-lon exist,
 			//check for item present in item_store
 			//
+			double price=0;
 			String itemName  = upItem.checkItemStore(res);
 
+			System.out.println("Item name-"+itemName);
 			if(!itemName.equalsIgnoreCase(itemInfo.getItem())){
 
 				//insert into item_store and item_location table
 				upItem.updateItem(itemInfo);
 			}else{
 
-				//get price from item_store and display
-			}
+				//double itemPrice = upItem.getItemPrice(itemInfo);
 
+				price = itemInfo.getPrice();
+				System.out.print("The price of item -" + price);
+			}
+			return Response.status(201).entity("Lowest price of the item ..").build();
 		}
-		
-		
-		return Response.status(201).entity("The select query result -"+res).build();
 	}
 }

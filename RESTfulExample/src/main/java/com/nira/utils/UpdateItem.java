@@ -2,6 +2,8 @@ package com.nira.utils;
 
 import com.nira.ItemInfo;
 
+import java.sql.SQLException;
+
 /**
  * Created by dhirendra.thakur on 8/9/15.
  */
@@ -18,22 +20,19 @@ public class UpdateItem {
 		iInfo.setLat(1);
 		iInfo.setLon(1);
 
-		int out = uItem.isLatLonExist(iInfo);
+		//int out = uItem.isLatLonExist(iInfo);
 
-		System.out.println(out);
+		//System.out.println(out);
 	}
 
-	public int isLatLonExist(ItemInfo itemData){
+	public int isLatLonExist(ItemInfo itemData) throws SQLException {
 
     	// run select query and check lat-lon exist or not
-    	//"select * from item_location where lat="+itemData.getLat()+" and lon="+itemData.getLon();
-		String latLonIdQuery = "select ss.address,ss.distance,item.item_name,item.price,item.rating,ss.lat,ss.lon " +
-				"from (SELECT id, ( 6371 * acos( cos( radians(?) ) * cos( radians( lat ) ) * cos( radians( lon ) - radians(?) ) + sin( radians(?) ) * sin( radians( lat ) ) ) ) AS distance" +
-				",address,lat,lon FROM item_location) ss,item_store item where ss.distance < 45 AND item.lat_lon_key=ss.id AND item.item_name=?;";
+		String latLonIdQuery = "select * from item_location where lat="+itemData.getLat()+" and lon="+itemData.getLon();
 
-		System.out.println(latLonIdQuery);
+		//System.out.println(latLonIdQuery);
 
-		ItemInfo itemLocDetail =  dbhelper.selectQuery(latLonIdQuery);
+		ItemInfo itemLocDetail =  dbhelper.selectInItemLocation(latLonIdQuery);
     	
     	if(itemLocDetail.getLocationID()!=0)
     	{
@@ -52,11 +51,11 @@ public class UpdateItem {
 		dbhelper.insertQuery(updateLocation);
 	}
 
-	public String checkItemStore(int latLonId) {
+	public String checkItemStore(int latLonId) throws SQLException {
 
-		String itemQuery = "select item_name from item_store where id ="+latLonId;
+		String itemQuery = "select * from item_store where lat_lon_key="+latLonId;
 
-		ItemInfo itemInfo = dbhelper.selectQuery(itemQuery);
+		ItemInfo itemInfo = dbhelper.selectInItemStore(itemQuery);
 
 		return itemInfo.getItem();
 	}
@@ -66,19 +65,20 @@ public class UpdateItem {
 		String updateItem = "";
 	}
 
-	public int getLatLonId(ItemInfo itemData) {
+	public int getLatLonId(ItemInfo itemData) throws SQLException {
 
-		String latQuery = "select id from item_location where lat="+itemData.getLat();
+		String latQuery = "select * from item_location where lat="+itemData.getLat();
 
-		ItemInfo itemId = dbhelper.selectQuery(latQuery);
+		ItemInfo itemId = dbhelper.selectInItemLocation(latQuery);
 
 		return itemId.getLocationID();
 	}
 
 	public void insertIntoItemStore(int lat_lon_id, ItemInfo itemInfo) {
 
-		String insertItem = "insert into item_store (item_name,lat_lon_key,rating,item_desc)"
-				+" values ("+"'"+itemInfo.getItem()+"'"+lat_lon_id+itemInfo.getRating()+")";
+		String insertItem = "insert into item_store (item_name,lat_lon_key,rating,item_desc,price)"
+				+" values ("+"'"+itemInfo.getItem()+"'"+","+lat_lon_id+","+itemInfo.getRating()+","
+				+itemInfo.getDescription()+","+itemInfo.getPrice()+")";
 
 		dbhelper.insertQuery(insertItem);
 	}
