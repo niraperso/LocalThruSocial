@@ -17,14 +17,15 @@ import java.util.*;
 public class RepoLoader {
 
     final DataSource ds;
-    final int itemrepoRefreshTime;
+    final int itemrepoRefreshTime, latlonrepoRefreshTime;
 
-    @Getter final ItemRepository itemRepository;
+    @Getter
+    final ItemRepository itemRepository;
     final PopulateItemStoreRepo populateItemStore;
     static final String itemQuery = "select a.item_name,a.price,a.rating,a.item_desc,b.address,b.lat,b.lon from " +
             "item_store a,item_location b where a.lat_lon_key=b.id;";
 
-    public RepoLoader(Configuration c){
+    public RepoLoader(Configuration c) {
         PGSimpleDataSource pgSimpleDataSource = new PGSimpleDataSource();
         pgSimpleDataSource.setServerName(c.getString(""));
         pgSimpleDataSource.setUser(c.getString(""));
@@ -32,35 +33,48 @@ public class RepoLoader {
         pgSimpleDataSource.setPortNumber(c.getInt(""));
         pgSimpleDataSource.setDatabaseName(c.getString(""));
         ds = pgSimpleDataSource;
-        itemrepoRefreshTime = c.getInt("")*1000;
+        itemrepoRefreshTime = c.getInt("") * 1000;
+        latlonrepoRefreshTime = c.getInt("") * 1000;
         itemRepository = new ItemRepository();
         populateItemStore = new PopulateItemStoreRepo();
     }
 
-    public void init(){
+    public void init() {
         refreshItemStore();
+        refreshLatLonRepo();
         new Timer().scheduleAtFixedRate(new TimerTask() {
             @Override
             public void run() {
                 refreshItemStore();
             }
-        },itemrepoRefreshTime,itemrepoRefreshTime);
+        }, itemrepoRefreshTime, itemrepoRefreshTime);
+        new Timer().scheduleAtFixedRate(new TimerTask() {
+            @Override
+            public void run() {
+                refreshLatLonRepo();
+            }
+        }, latlonrepoRefreshTime, latlonrepoRefreshTime);
     }
 
-    private void refreshItemStore() {
+    private void refreshLatLonRepo() {
         try {
             Connection c = ds.getConnection();
-            HashMap<ItemLatLonPair,ReqResParams> map = populateItemStore.populateItemStore(c,itemQuery);
-            itemRepository.update(map,new Date());
+            HashMap<ItemLatLonPair, ReqResParams> map = populateItemStore.populateItemStore(c, itemQuery);
+            itemRepository.update(map, new Date());
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
+    private void refreshItemStore() {
+        try {
+            Connection c = ds.getConnection();
+            HashMap<ItemLatLonPair, ReqResParams> map = populateItemStore.populateItemStore(c, itemQuery);
+            itemRepository.update(map, new Date());
 
-
-public boolean isInitialized(){
-        return itemRepository.isInitialized;
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 }
